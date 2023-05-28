@@ -24,4 +24,4 @@ jobs:
           PYPI_USERNAME: __token__
           PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          /home/runner/.local/bin/poetry publish
+          /home/runner/.local/bin/poetry publish --build
