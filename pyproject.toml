@@ -5,7 +5,7 @@ license = "MIT"
 name = "django-batteries"
 packages = [{include = "django_batteries"}]
 readme = "README.md"
-version = "0.0.2"
+version = "0.0.3"
 
 [tool.poetry.dependencies]
 django = "^4.1.7"
