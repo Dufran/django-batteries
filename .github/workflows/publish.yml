@@ -22,6 +22,6 @@ jobs:
       - name: Add auth to poetry
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-      - name: Buid and publish 
+      - name: Buid and publish
         run: |
-          /home/runner/.local/bin/poetry publish --build
+          poetry publish --build
