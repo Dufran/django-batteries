@@ -1,5 +1,5 @@
-from django.utils.timezone import now
 from django.db import models
+from django.utils.timezone import now
 
 
 class AutoCreatedField(models.DateTimeField):
@@ -56,7 +56,7 @@ class MonitorField(models.DateTimeField):
         kwargs.setdefault("default", now)
         monitor = kwargs.pop("monitor", None)
         if not monitor:
-            raise TypeError('%s requires a "monitor" argument' % self.__class__.__name__)
+            raise TypeError(f'{self.__class__.__name__} requires a "monitor" argument')
         self.monitor = monitor
         when = kwargs.pop("when", None)
         if when is not None:
@@ -65,7 +65,7 @@ class MonitorField(models.DateTimeField):
         super().__init__(*args, **kwargs)
 
     def contribute_to_class(self, cls, name):
-        self.monitor_attname = "_monitor_%s" % name
+        self.monitor_attname = f"_monitor_{name}"
         models.signals.post_init.connect(self._save_initial, sender=cls)
         super().contribute_to_class(cls, name)
 
@@ -82,10 +82,9 @@ class MonitorField(models.DateTimeField):
         value = now()
         previous = getattr(model_instance, self.monitor_attname, None)
         current = self.get_monitored_value(model_instance)
-        if previous != current:
-            if self.when is None or current in self.when:
-                setattr(model_instance, self.attname, value)
-                self._save_initial(model_instance.__class__, model_instance)
+        if previous != current and (self.when is None or current in self.when):
+            setattr(model_instance, self.attname, value)
+            self._save_initial(model_instance.__class__, model_instance)
         return super().pre_save(model_instance, add)
 
     def deconstruct(self):

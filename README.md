@@ -6,27 +6,27 @@ This package contains useful utilities for django/drf project
 
 Contains set of abstract models to enforce DRY principle for most common use cases
 
-### TimeStampedModel
+### `django_batteries.models.TimeStampedModel`
 
 - `created`
 - `modified`
 
-### TimeFramedModel
+### `django_batteries.models.TimeFramedModel`
 
 - `start`
 - `end`
 
   For time bound entities
 
-### DescriptionModel
+### `django_batteries.models.DescriptionModel`
 
 - `description`
 
-### TitleModel
+### `django_batteries.models.TitleModel`
 
 - `title`
 
-### TitleDescriptionModel
+### `django_batteries.models.TitleDescriptionModel`
 
 - `title`
 - `description`
@@ -43,4 +43,24 @@ class MyMode(models.Model):
     title = models.Charfield(max_length=50)
     title_changed = MonitorField(_('title changed'), monitor='title')
 
-## Tests
+## Mixins
+
+### `django_batteries.mixins.ListSerializerMixin`
+
+Allow you to specify `list_serializer_class` that will be used only in list action
+
+## Paginators
+
+### django_batteries.paginators.ResultSetPagination
+
+Paginator with `page_size` as query parameter for setting page size
+
+### django_batteries.paginators.SingleResultPaginator
+
+Custom paginator class that returns not paginated(detail result) if qs result have only 1 item
+
+## Utils
+
+### django_batteries.utils.qs_admin_or_author
+
+Return all objects if user is staff, otherwise return objects owned by user

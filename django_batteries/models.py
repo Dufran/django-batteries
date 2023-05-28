@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -19,8 +20,7 @@ class TimeStampedModel(models.Model):
         modified field is updated even if it is not given as
         a parameter to the update field argument.
         """
-        update_fields = kwargs.get("update_fields", None)
-        if update_fields:
+        if update_fields := kwargs.get("update_fields", None):
             kwargs["update_fields"] = set(update_fields).union({"modified"})
 
         super().save(*args, **kwargs)
@@ -43,7 +43,7 @@ class TimeFramedModel(models.Model):
 
 
 class DescriptionModel(models.Model):
-    description = models.TextField(_("description"), null=True, blank=True)
+    description = models.TextField(_("description"), blank=True)
 
     class Meta:
         abstract = True
@@ -70,6 +70,44 @@ class TitleDescriptionModel(TitleModel, DescriptionModel):
     ``title`` and ``description`` field to use in your models
 
     """
+
+    class Meta:
+        abstract = True
+
+
+class OwnershipSingleModel(models.Model):
+    """Add relation to project auth user for single instance
+
+    For example:
+
+    CustomerBonusWallet can be accessed via:
+
+    ``user.customerbonuswallet``
+    """
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="%(class)s",
+    )
+
+    class Meta:
+        abstract = True
+
+
+class OwnershipMultipleModel(models.Model):
+    """Add relation to project auth user for multiple instance
+
+    For example:
+
+    CustomerBonusWallet can be accessed via:
+
+    ``user.customerwishlist``
+    """
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="%(class)s")
 
     class Meta:
         abstract = True
